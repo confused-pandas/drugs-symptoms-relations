@@ -16,18 +16,20 @@ class SiderMeddraManager:
         self.password = "esial"
 
     def extractData(self):
+        data_meddra={}
         connection = pymysql.connect(self.server,self.userName,self.password,self.database, cursorclass=pymysql.cursors.DictCursor)
         param = "%"+ self.clinicalSign +"%"
         try:
             with connection.cursor() as cursor:
-                sql = "SELECT cui, label FROM meddra_all_indications"
+                sql = "SELECT cui FROM meddra_all_indications WHERE label="+str(self.clinicalSign)+";"
                 cursor.execute(sql)
-                result = cursor.fetchall()
-                print(result)
+                data_meddra[str(self.clinicalSign)] = cursor.fetchall()
+                print(data_meddra)
         finally:
             connection.close()
        
-manager = SiderMeddraManager()
+manager = SiderMeddraManager(testClinicalSign) 
+manager.extractData()
 
 
     
