@@ -1,4 +1,4 @@
-import mysql
+import pymysql
 
 class SiderIndicationsManager:
     """Class that enables to get data from Sider DataBase, from the meddra_all_indications table. Has attributes:

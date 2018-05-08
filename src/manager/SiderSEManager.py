@@ -12,17 +12,15 @@ class SiderSEManager:
     def extractData(self):
         data_SE={}
         connection = pymysql.connect(self.server,self.userName,self.password,self.database, cursorclass=pymysql.cursors.DictCursor)
-        param = "%"+ self.clinicalSign +"%"
         try:
             with connection.cursor() as cursor:
-                sql = "SELECT stitch_compound_id1, stitch_compound_id2, cui, meddra_concept_type, cui_of_meddra_term FROM meddra_all_indications WHERE side_effect_name="+str(self.clinicalSign)+";"
-                cursor.execute(sql)
+                cursor.execute('SELECT stitch_compound_id1, stitch_compound_id2, cui, meddra_concept_type, cui_of_meddra_term FROM meddra_all_se WHERE side_effect_name=%s;',str(self.clinicalSign))
                 data_SE[str(self.clinicalSign)] = cursor.fetchall()
                 print(data_SE)
         finally:
             connection.close()
        
-manager = SiderSEManager(testClinicalSign) 
+manager = SiderSEManager("Acute abdomen") 
 manager.extractData()
 
 
