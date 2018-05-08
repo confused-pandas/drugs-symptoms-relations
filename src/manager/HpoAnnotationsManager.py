@@ -1,16 +1,22 @@
 import sqlite3
 from sqlite3 import Error
 
+class HpoAnnotationsManager:
 
-try:
-    conn = sqlite3.connect("./res/database/hpo/hpo_annotations.sqlite")
-except Error as e:
-    print(e)
+    def __init__(self, diseaseId):
+        self.diseaseId = diseaseId
+        self.path = "./res/database/hpo/hpo_annotations.sqlite"
 
- 
-cur = conn.cursor()
-cur.execute('SELECT disease_db, disease_id, sign_id FROM phenotype_annotation;')
-rows = cur.fetchall()
+    def extractData(self):
+        data_hpo = {}
+        try:
+            conn = sqlite3.connect(self.path)
+        except Error as e:
+            print(e)
+        cur = conn.cursor()
+        cur.execute('SELECT disease_db, sign_id FROM phenotype_annotation WHERE disease_id = '+str(self.diseaseId)+';')
+        data_hpo[str(self.diseaseId)] = cur.fetchall()
+        print(data_hpo)
 
-for row in rows:
-    print(row)
+manager = HpoAnnotationsManager(42)
+manager.extractData()
