@@ -9,14 +9,15 @@ class HpoAnnotationsManager:
 
     def extractData(self):
         data_hpo = {}
-        try:
-            conn = sqlite3.connect(self.path)
-        except Error as e:
-            print(e)
+        conn = sqlite3.connect(self.path)
         cur = conn.cursor()
         cur.execute('SELECT disease_db, sign_id FROM phenotype_annotation WHERE disease_id = '+str(self.diseaseId)+';')
         data_hpo[str(self.diseaseId)] = cur.fetchall()
         print(data_hpo)
 
 manager = HpoAnnotationsManager(42)
-manager.extractData()
+manager.extractData()    
+
+
+"
+"""C:\\Users\\mlysr\\Desktop\\GMD\\gmd-project\\res\\database\\hpo\\hpo_annotations.sqlite"""
