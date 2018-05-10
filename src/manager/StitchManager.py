@@ -35,4 +35,4 @@ manager.extractData()
     CIDm00452550
     CIDm09804938"""
     
-"""path ML : C:\\Users\\mlysr\\Desktop\\GMD\\gmd-project\\res\\database\\stitch\\chemical.sources.tsv"
+"""path ML : C:\\Users\\mlysr\\Desktop\\GMD\\gmd-project\\res\\database\\stitch\\chemical.sources.tsv"""
