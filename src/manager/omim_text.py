@@ -24,40 +24,17 @@ class OmimTextManager:
         return ix, writer
         
     # Extract data from Omim.txt and store it in a dictionnary
-    def extractData(self, ix, writer):
-        data_omimt = {}
-        file = self.file
-        line = file.readline()
-        while line != "":
-            if line == "*FIELD* NO\n":
-                id = file.readline()
-                id = id.replace("\n","")
-            if line == "*FIELD* TI\n":
-                line = file.readline()
-                titre = ""
-                while not line.startswith("*"):
-                    titre = titre+line
-                    titre = titre.replace("\n","")
-                    line = file.readline()
-            if line == "*FIELD* CS\n":
-                line = file.readline()
-                clign = ""
-                while not line.startswith("*"):
-                    clign = clign + line
-                    clign = clign.replace("\n","")
-                    line = file.readline()
-                writer.add_document(omim_id=id, cs=clign, title=titre)
-            line = file.readline()
-
-        writer.commit()                   
+    def extractData(self):
+        data_omimt = {}                  
         r = parserQuery(self.clignical_sign)
         for elem in r:
-            data_omimt[self.clignical_sign] = elem.get("omim_id"), elem.get("title")[7:]
+            data_omimt[elem.get("omim_id")] = elem.get("title")[7:]
         print(data_omimt)
 
 
 
 def parserQuery(cs):
+    ix = open_dir("./res/database/omim/index_omim") 
     searcher = ix.searcher()
     query = QueryParser("cs", ix.schema).parse(cs)
     results = searcher.search(query)
@@ -65,5 +42,4 @@ def parserQuery(cs):
     return results
 
 manager = OmimTextManager("Normocephaly")
-ix, writer = manager.index_initialisation()
-manager.extractData(ix, writer)
+manager.extractData()
