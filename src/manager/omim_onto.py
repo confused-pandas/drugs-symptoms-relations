@@ -22,9 +22,9 @@ class OmimOntoManager:
                     if row[0][42:48] == self.omim:
                         data_omimc[self.omim] = row[5]
                         b = True
-        print(data_omimc)
+        return data_omimc
 
 
 
 manager = OmimOntoManager("600374")
-manager.extractData()
+print(manager.extractData())

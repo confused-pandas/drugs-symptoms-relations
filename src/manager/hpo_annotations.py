@@ -13,10 +13,10 @@ class HpoAnnotationsManager:
         cur = conn.cursor()
         cur.execute('SELECT disease_db FROM phenotype_annotation WHERE disease_id = '+str(self.diseaseId)+' AND disease_db IN ("OMIM", "ORPHA") ;')
         data_hpo[str(self.diseaseId)] = cur.fetchall()
-        print(data_hpo)
+        return data_hpo
 
 manager = HpoAnnotationsManager(1745)
-manager.extractData()    
+print(manager.extractData())    
 
 
 """C:\\Users\\mlysr\\Desktop\\GMD\\gmd-project\\res\\database\\hpo\\hpo_annotations.sqlite"""

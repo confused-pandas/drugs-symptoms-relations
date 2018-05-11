@@ -1,5 +1,5 @@
 from .omim_text import OmimTextManager
-from .omim_onto import OmimCsvManager
+from .omim_onto import OmimOntoManager
 from .hpo import HpoManager
 from .hpo_annotations import HpoAnnotationsManager
 from .sider_indications import SiderIndicationsManager

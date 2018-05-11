@@ -24,18 +24,20 @@ class HpoManager:
         file = self.file
         line = file.readline()
         while line != "":
-            if line[:6].startswith("name: "):
+            if line.startswith("name: "):
                 name = line[6:]
                 name.replace("\n","")
-            if line[:10].startswith('synonym: "'):
+            if line.startswith('synonym: "'):
                 synonym = line[10:]
                 synonym.replace("\n","")
-            if line[:11].startswith("xref: UMLS:"):
+            if line.startswith("xref: UMLS:"):
                 xref = line[11:]
                 xref.replace("\n","")
-            if line[:9].startswith("is_a: HP:"):
-                is_a = line[9:]
-                is_a.replace("\n","")
+            if line.startswith("is_a: HP:"):
+                is_a = []
+                while line.startswith("is_a"):
+                    is_a.append(line[19:].replace('\n',''))
+                    line = file.readline()
                 writer.add_document(name=name, synonym=synonym, umls=xref, is_a=is_a)
             line = file.readline()
         writer.commit()
@@ -45,8 +47,8 @@ class HpoManager:
         data_hpo = {}
         r = parserQuery(self, self.synonym)
         for elem in r:
-            data_hpo[elem.get("umls")[:-1]] = elem.get("synonym")[:-21], elem.get("name")[:-1], elem.get("is_a")[:7]
-        print(data_hpo)
+            data_hpo[elem.get("umls")[:-1]] = elem.get("synonym")[:-21], elem.get("name")[:-1], elem.get("is_a")
+        return data_hpo
 
 def parserQuery(self, synonym):
     ix = open_dir(self.path_index)
@@ -56,6 +58,6 @@ def parserQuery(self, synonym):
     results[0]
     return results
 
-manager = HpoManager("Abnormality of body height")
+manager = HpoManager("Abnormality of the eyebrow")
 #manager.index_initialisation()
-manager.extractData()
+print(manager.extractData())

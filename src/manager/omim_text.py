@@ -51,7 +51,7 @@ class OmimTextManager:
         r = parserQuery(self, self.clignical_sign)
         for elem in r:
             data_omimt[elem.get("omim_id")] = elem.get("title")[7:].lstrip()
-        print(data_omimt)
+        return data_omimt
 
 
 
@@ -65,4 +65,4 @@ def parserQuery(self, cs):
 
 manager = OmimTextManager("Normocephaly")
 #manager.index_initialisation()
-manager.extractData()
+print(manager.extractData())
