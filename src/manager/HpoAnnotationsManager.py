@@ -19,5 +19,4 @@ manager = HpoAnnotationsManager(42)
 manager.extractData()    
 
 
-"
 """C:\\Users\\mlysr\\Desktop\\GMD\\gmd-project\\res\\database\\hpo\\hpo_annotations.sqlite"""

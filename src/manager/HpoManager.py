@@ -50,12 +50,12 @@ class HpoManager:
             data_hpo[elem.get("umls")[:-1]] = elem.get("synonym")[:-21], elem.get("name")[:-1], elem.get("is_a")[:7]
         print(data_hpo)
 
-def parserQuery(um):
-    searcher = ix.searcher()
-    query = QueryParser("synonym", ix.schema).parse(um)
-    results = searcher.search(query)
-    results[0]
-    return results
+    def parserQuery(um):
+        searcher = ix.searcher()
+        query = QueryParser("synonym", ix.schema).parse(um)
+        results = searcher.search(query)
+        results[0]
+        return results
 
 manager = HpoManager("Abnormality of body height")
 ix, writer = manager.index_initialisation()
