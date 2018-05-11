@@ -8,8 +8,8 @@ class OmimTextManager:
         from the Omim.txt file
     """
 
-    def __init__(self, clignical_sign):
-        self.clignical_sign = clignical_sign
+    def __init__(self, item):
+        self.item = item
         self.file = open('./res/database/omim/omim.txt')
         self.path_index = "./res/database/omim/index_omim"
         self.schema = Schema(omim_id=TEXT(stored=True), cs=TEXT(stored=True), title=TEXT(stored=True))
@@ -46,23 +46,32 @@ class OmimTextManager:
         writer.commit()
         
     # Extract data from Omim.txt and store it in a dictionnary
-    def extractData(self):
+    def extractDataFromCs(self):
         data_omimt = {}                   
-        r = parserQuery(self, self.clignical_sign)
+        r = parserQuery(self, self.item, "cs")
         for elem in r:
             data_omimt[elem.get("omim_id")] = elem.get("title")[7:].lstrip()
         return data_omimt
 
+    def extractDataFromOmim(self):
+        data_omimt = {}
+        r = parserQuery(self, self.item, "omim_id")
+        for elem in r:
+            data_omimt[self.item] = elem.get("title")[7:].lstrip()
+        return data_omimt
 
 
-def parserQuery(self, cs):
+
+def parserQuery(self, item, schema_item):
     ix = open_dir(self.path_index)
     searcher = ix.searcher()
-    query = QueryParser("cs", ix.schema).parse(cs)
+    query = QueryParser(schema_item, ix.schema).parse(item)
     results = searcher.search(query)
     results[0]
     return results
 
-manager = OmimTextManager("Normocephaly")
+
+
+#manager = OmimTextManager("Normocephaly")
 #manager.index_initialisation()
-print(manager.extractData())
+#print(manager.extractDataFromCs())

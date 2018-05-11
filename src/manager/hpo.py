@@ -12,7 +12,7 @@ class HpoManager:
         self.synonym = synonym
         self.file = open('./res/database/hpo/hp.obo')
         self.path_index = "./res/database/hpo/index_hpo"
-        self.schema = Schema(name=TEXT(stored=True), synonym=TEXT(stored=True), umls=TEXT(stored=True), is_a=TEXT(stored=True))
+        self.schema = Schema(name=TEXT(stored=True), synonym=TEXT(stored=True), cui=TEXT(stored=True), is_a=TEXT(stored=True))
 
     # Create the index
     def index_initialisation(self):
@@ -28,8 +28,10 @@ class HpoManager:
                 name = line[6:]
                 name.replace("\n","")
             if line.startswith('synonym: "'):
-                synonym = line[10:]
-                synonym.replace("\n","")
+                synonym = []
+                while line.startswith("synonym"):
+                    synonym.append(line[10:].replace('\n',''))
+                    line = file.readline()
             if line.startswith("xref: UMLS:"):
                 xref = line[11:]
                 xref.replace("\n","")
@@ -38,7 +40,7 @@ class HpoManager:
                 while line.startswith("is_a"):
                     is_a.append(line[19:].replace('\n',''))
                     line = file.readline()
-                writer.add_document(name=name, synonym=synonym, umls=xref, is_a=is_a)
+                writer.add_document(name=name, synonym=synonym, cui=xref, is_a=is_a)
             line = file.readline()
         writer.commit()
         
@@ -47,17 +49,20 @@ class HpoManager:
         data_hpo = {}
         r = parserQuery(self, self.synonym)
         for elem in r:
-            data_hpo[elem.get("umls")[:-1]] = elem.get("synonym")[:-21], elem.get("name")[:-1], elem.get("is_a")
+            l = []
+            for i in range(0, len(elem.get("synonym"))):
+                l.append(elem.get("synonym")[i][:elem.get("synonym")[i].index('"')])
+            data_hpo[elem.get("cui")[:-1]] = l #, elem.get("name")[:-1] #, elem.get("is_a")
         return data_hpo
 
-def parserQuery(self, synonym):
+def parserQuery(self, name):
     ix = open_dir(self.path_index)
     searcher = ix.searcher()
-    query = QueryParser("synonym", ix.schema).parse(synonym)
+    query = QueryParser("name", ix.schema).parse(name)
     results = searcher.search(query)
     results[0]
     return results
 
-manager = HpoManager("Abnormality of the eyebrow")
+manager = HpoManager("Aplasia/Hypoplasia of the radius")
 #manager.index_initialisation()
 print(manager.extractData())
