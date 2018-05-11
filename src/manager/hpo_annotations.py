@@ -11,11 +11,11 @@ class HpoAnnotationsManager:
         data_hpo = {}
         conn = sqlite3.connect(self.path)
         cur = conn.cursor()
-        cur.execute('SELECT disease_db, sign_id FROM phenotype_annotation WHERE disease_id = '+str(self.diseaseId)+';')
+        cur.execute('SELECT disease_db FROM phenotype_annotation WHERE disease_id = '+str(self.diseaseId)+' AND disease_db IN ("OMIM", "ORPHA") ;')
         data_hpo[str(self.diseaseId)] = cur.fetchall()
         print(data_hpo)
 
-manager = HpoAnnotationsManager(42)
+manager = HpoAnnotationsManager(1745)
 manager.extractData()    
 
 

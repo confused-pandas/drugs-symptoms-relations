@@ -50,9 +50,9 @@ class HpoManager:
             data_hpo[elem.get("umls")[:-1]] = elem.get("synonym")[:-21], elem.get("name")[:-1], elem.get("is_a")[:7]
         print(data_hpo)
 
-    def parserQuery(um):
+    def parserQuery(synonym):
         searcher = ix.searcher()
-        query = QueryParser("synonym", ix.schema).parse(um)
+        query = QueryParser("synonym", ix.schema).parse(synonym)
         results = searcher.search(query)
         results[0]
         return results
