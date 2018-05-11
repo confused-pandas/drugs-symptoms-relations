@@ -21,11 +21,6 @@ class HpoManager:
         ix = create_in(self.path_index, self.schema)
         ix = open_dir(self.path_index)
         writer = ix.writer()
-        return ix, writer
-        
-    # Extract data from hp.obo and store it in a dictionnary
-    def extractData(self, ix, writer):
-        data_hpo = {}
         file = self.file
         line = file.readline()
         while line != "":
@@ -43,20 +38,24 @@ class HpoManager:
                 is_a.replace("\n","")
                 writer.add_document(name=name, synonym=synonym, umls=xref, is_a=is_a)
             line = file.readline()
-
         writer.commit()
-        r = parserQuery(self.synonym)
+        
+    # Extract data from hp.obo and store it in a dictionnary
+    def extractData(self):
+        data_hpo = {}
+        r = parserQuery(self, self.synonym)
         for elem in r:
             data_hpo[elem.get("umls")[:-1]] = elem.get("synonym")[:-21], elem.get("name")[:-1], elem.get("is_a")[:7]
         print(data_hpo)
 
-    def parserQuery(synonym):
-        searcher = ix.searcher()
-        query = QueryParser("synonym", ix.schema).parse(synonym)
-        results = searcher.search(query)
-        results[0]
-        return results
+def parserQuery(self, synonym):
+    ix = open_dir(self.path_index)
+    searcher = ix.searcher()
+    query = QueryParser("synonym", ix.schema).parse(synonym)
+    results = searcher.search(query)
+    results[0]
+    return results
 
 manager = HpoManager("Abnormality of body height")
-ix, writer = manager.index_initialisation()
-manager.extractData(ix, writer)
+#manager.index_initialisation()
+manager.extractData()
