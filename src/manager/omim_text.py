@@ -72,6 +72,6 @@ def parserQuery(self, item, schema_item):
 
 
 
-#manager = OmimTextManager("Normocephaly")
+manager = OmimTextManager("Normocephaly")
 #manager.index_initialisation()
-#print(manager.extractDataFromCs())
+print(manager.extractDataFromCs())
