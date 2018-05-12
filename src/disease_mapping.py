@@ -14,6 +14,8 @@ class DiseaseMapping:
         data_omim_text = OmimTextManager(self.clignical_sign).extractDataFromCs()
         data_hpo = HpoManager(self.clignical_sign).extractDataFromSynonym()
         
+        cpt_not_matched = 0  # Number of element not matched
+        cpt_matched = 0   # Number of element matched
         # Search in the synonyms
         for cui in data_hpo.keys():
             list_omim = []
@@ -28,17 +30,23 @@ class DiseaseMapping:
                     #list_orpha.append()
             for omim in list_omim:
                 if OmimTextManager(omim).extractDataFromOmim() == {}:
-                    print("pas de référence pour cet id")
+                   cpt_not_matched += 1 
                 else:
+                    cpt_matched += 1
                     disease_name = OmimTextManager(omim).extractDataFromOmim()[omim]
-                    print(disease_name)
-                    print("------------------------------")
+                    print("OMIM -> |"+omim+"|"+ "----SOURCE -> |"+"HP.OBO")
+                    print("NAME -> |"+disease_name)
+                    print("---------------------------------------------------------------")
 
         # Search in omim
         for key in data_omim_text.keys():
             disease_name = data_omim_text[str(key)]
-            print(disease_name)
-            print("-------------------")
+            print("OMIM -> |"+key+"|"+ "----SOURCE -> |"+"OMIM.TXT")
+            print("NAME -> |"+disease_name)
+            print("------------------------------------------------------------------------")
+
+        q = cpt_matched/(cpt_matched+cpt_not_matched)*100
+        print("Quality of Mapping : ", q, "%")
             
         
     
