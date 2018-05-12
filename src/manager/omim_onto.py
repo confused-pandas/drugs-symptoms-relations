@@ -1,48 +1,51 @@
+import os, os.path
+from whoosh.index import *
+from whoosh.fields import *
+from whoosh.qparser import QueryParser
 import csv
 
 class OmimOntoManager:
 
-    def __init__(self, id):
-        self.id = id
+    def __init__(self, item):
+        self.item = item
         self.path = './res/database/omim/omim_onto.csv'
+        self.path_index = './res/database/omim/index_omim_onto.csv'
+        self.schema = Schema(cui=TEXT(stored=True), omim=TEXT(stored=True))
 
-    def extractDataFromOmim(self):
-        data_omimc = {}
-        with open('./res/database/omim/omim_onto.csv','r') as csv_file:
+    def index_initialisation(self):
+        if not os.path.exists(self.path_index):
+            os.mkdir(self.path_index)
+        ix = create_in(self.path_index, self.schema)
+        ix = open_dir(self.path_index)
+        writer = ix.writer()
+        with open(self.path,'r') as csv_file:
             csv_reader = csv.reader(csv_file)
-            b = False
-            while b != True:
-                row = csv_reader.__next__()
-                a = row[0][42:]
-                if a.startswith("MTHU"):
-                    if row[0][46:52] == self.id:
-                        data_omimc[self.id] = row[5]
-                        b = True
+            for row in csv_reader:
+                cui = row[5][:8]
+                cur = row[0][42:]
+                if cur.startswith("MTHU"):
+                    omim = row[0][46:52]
                 else:
-                    if row[0][42:48] == self.id:
-                        data_omimc[self.id] = row[5]
-                        b = True
-        return data_omimc
+                    omim = row[0][42:48]
+                writer.add_document(cui=cui, omim=omim)
+            writer.commit()
 
     def extractDataFromCui(self):
         data_omimc = {}
-        with open('./res/database/omim/omim_onto.csv','r') as csv_file:
-            csv_reader = csv.reader(csv_file)
-            b = False
-            while b != True:
-                row = csv_reader.__next__()
-                a = row[5]
-                if a == self.id:
-                    if row[0][42:].startswith("MTHU"):
-                        data_omimc[self.id] = row[0][46:52]
-                        b = True
-                    else:
-                        data_omimc[self.id] = row[0][42:48]
-                        b = True
+        r = parserQuery(self, self.item, "cui")
+        for elem in r:
+            data_omimc[self.item] = elem.get("omim")
         return data_omimc
 
 
 
+def parserQuery(self, item, schema_item):
+    ix = open_dir(self.path_index)
+    searcher = ix.searcher()
+    query = QueryParser(schema_item, ix.schema).parse(item)
+    results = searcher.search(query)
+    return results
 
-#manager = OmimOntoManager("C1412749")
+#manager = OmimOntoManager("C0730362")
+#manager.index_initialisation()
 #print(manager.extractDataFromCui())

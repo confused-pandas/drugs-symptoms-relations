@@ -3,20 +3,21 @@ from sqlite3 import Error
 
 class HpoAnnotationsManager:
 
-    def __init__(self, diseaseId):
-        self.diseaseId = diseaseId
+    def __init__(self, hpId):
+        self.hpId = hpId
         self.path = "./res/database/hpo/hpo_annotations.sqlite"
 
     def extractData(self):
         data_hpo = {}
         conn = sqlite3.connect(self.path)
         cur = conn.cursor()
-        cur.execute('SELECT disease_db FROM phenotype_annotation WHERE disease_id = '+str(self.diseaseId)+' AND disease_db IN ("OMIM", "ORPHA") ;')
-        data_hpo[str(self.diseaseId)] = cur.fetchall()
+        cur.execute('SELECT disease_id, disease_db FROM phenotype_annotation WHERE sign_id = "'+str(self.hpId)+'";')
+        data_hpo[str(self.hpId)] = cur.fetchall()
         return data_hpo
 
-manager = HpoAnnotationsManager(1745)
-print(manager.extractData())    
+#manager = HpoAnnotationsManager('HP:0000157')
+#l=manager.extractData()
+#print(l)   
 
 
 """C:\\Users\\mlysr\\Desktop\\GMD\\gmd-project\\res\\database\\hpo\\hpo_annotations.sqlite"""

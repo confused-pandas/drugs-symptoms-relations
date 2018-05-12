@@ -67,11 +67,10 @@ def parserQuery(self, item, schema_item):
     searcher = ix.searcher()
     query = QueryParser(schema_item, ix.schema).parse(item)
     results = searcher.search(query)
-    results[0]
     return results
 
 
 
-manager = OmimTextManager("Normocephaly")
+manager = OmimTextManager("615107")
 #manager.index_initialisation()
-print(manager.extractDataFromCs())
+print(manager.extractDataFromOmim())

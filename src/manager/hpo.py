@@ -13,7 +13,7 @@ class HpoManager:
         self.file = open('./res/database/hpo/hp.obo')
         self.path_index = "./res/database/hpo/index_hpo"
         self.path_index_synonym = "./res/database/hpo/index_hpo_synonym"
-        self.schema = Schema(name=TEXT(stored=True), synonym=TEXT(stored=True), cui=TEXT(stored=True), is_a=TEXT(stored=True))
+        self.schema = Schema(id=TEXT(stored=True), name=TEXT(stored=True), synonym=TEXT(stored=True), cui=TEXT(stored=True), is_a=TEXT(stored=True))
 
     # Create the index
     def index_initialisation(self):
@@ -25,9 +25,12 @@ class HpoManager:
         file = self.file
         line = file.readline()
         while line != "":
+            if line.startswith("id: "):
+                id = line[7:]
+                id = id.replace('\n','')
             if line.startswith("name: "):
                 name = line[6:]
-                name.replace("\n","")
+                name = name.replace("\n","")
             if line.startswith('synonym: "'):
                 synonym = []
                 while line.startswith("synonym"):
@@ -35,13 +38,13 @@ class HpoManager:
                     line = file.readline()
             if line.startswith("xref: UMLS:"):
                 xref = line[11:]
-                xref.replace("\n","")
+                xref = xref.replace("\n","")
             if line.startswith("is_a: HP:"):
                 is_a = []
                 while line.startswith("is_a"):
                     is_a.append(line[19:].replace('\n',''))
                     line = file.readline()
-                writer.add_document(name=name, synonym=synonym, cui=xref, is_a=is_a)
+                writer.add_document(id=id, name=name, synonym=synonym, cui=xref, is_a=is_a)
             line = file.readline()
         writer.commit()
 
@@ -54,9 +57,12 @@ class HpoManager:
         file = self.file
         line = file.readline()
         while line != "":
+            if line.startswith("id: "):
+                id = line[7:]
+                id = id.replace('\n','')
             if line.startswith("name: "):
                 name = line[6:]
-                name.replace("\n","")
+                name = name.replace("\n","")
             if line.startswith('synonym: "'):
                 synonym = ""
                 while line.startswith('synonym'):
@@ -64,32 +70,32 @@ class HpoManager:
                     line = file.readline()
             if line.startswith("xref: UMLS:"):
                 xref = line[11:]
-                xref.replace("\n","")
+                xref = xref.replace("\n","")
             if line.startswith("is_a: HP:"):
                 is_a = []
                 while line.startswith("is_a"):
                     is_a.append(line[19:].replace('\n',''))
                     line = file.readline()
-                writer.add_document(name=name, synonym=synonym, cui=xref, is_a=is_a)
+                writer.add_document(id=id, name=name, synonym=synonym, cui=xref, is_a=is_a)
             line = file.readline()
         writer.commit()
         
     # Extract data from hp.obo and store it in a dictionnary
-    def extractData(self):
+    def extractDataFromName(self):
         data_hpo = {}
         r = parserQuery(self, self.path_index, self.synonym, "name")
         for elem in r:
             l = []
             for i in range(0, len(elem.get("synonym"))):
                 l.append(elem.get("synonym")[i][:elem.get("synonym")[i].index('"')])
-            data_hpo[elem.get("cui")[:-1]] = l #, elem.get("name")[:-1] #, elem.get("is_a")
+            data_hpo[elem.get("cui")] = l #, elem.get("name")[:-1] #, elem.get("is_a")
         return data_hpo
 
     def extractDataFromSynonym(self):
         data_hpo = {}
         r = parserQuery(self, self.path_index_synonym, self.synonym, "synonym")
         for elem in r:
-            data_hpo[elem.get("cui")[:-1]] = elem.get("name")[:-1]
+            data_hpo[elem.get("cui")] = elem.get("name"), elem.get("id")
         return data_hpo
 
 
@@ -98,12 +104,11 @@ def parserQuery(self, path, item, schema_item):
     searcher = ix.searcher()
     query = QueryParser(schema_item, ix.schema).parse(item)
     results = searcher.search(query)
-    results[0]
     return results
 
-manager = HpoManager("Abnormality")
+#manager = HpoManager("Abnormality")
 #manager.index_initialisation()
 #manager.index_initialisation_synonym()
-print(manager.extractDataFromSynonym())
+#print(manager.extractDataFromSynonym())
 
 # Abnormality of craniofacial shape
