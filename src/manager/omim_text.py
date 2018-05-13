@@ -71,7 +71,7 @@ def parserQuery(self, item, schema_item):
 
 
 
-manager = OmimTextManager("100100")
+#manager = OmimTextManager("100100")
 #manager.index_initialisation()
-l = manager.extractDataFromOmim()
-print(l["100100"].replace(';','|'))
+#l = manager.extractDataFromOmim()
+#print(l["100100"].replace(';','|'))

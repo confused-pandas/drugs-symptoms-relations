@@ -2,6 +2,7 @@ from manager.hpo import HpoManager
 from manager.hpo_annotations import HpoAnnotationsManager
 from manager.omim_onto import OmimOntoManager
 from manager.omim_text import OmimTextManager
+import sys
 
 class DiseaseMapping:
 
@@ -44,10 +45,15 @@ class DiseaseMapping:
             print("OMIM -> |"+key+"|"+ "----SOURCE -> |"+"OMIM.TXT")
             print("NAME -> |"+disease_name)
             print("------------------------------------------------------------------------")
-
-        q = cpt_matched/(cpt_matched+cpt_not_matched)*100
-        print("Quality of Mapping : ", q, "%")
+    
+        if (cpt_matched+cpt_not_matched == 0):
+            q = "No mapping necessary for these data"
+            print("Quality of Mapping : ", q)
+        else:
+            q = cpt_matched/(cpt_matched+cpt_not_matched)*100
+            print("Quality of Mapping between omim.txt and hpo_annotations.sqlite : ", q, "%")
+        
             
         
     
-DiseaseMapping("Abnormality").mapping()
+DiseaseMapping(sys.argv[1]).mapping()
