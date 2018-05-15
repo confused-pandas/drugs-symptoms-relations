@@ -16,10 +16,9 @@ class SiderIndicationsManager:
     def extractData(self):
         connexion = pymysql.connect(self.server,self.userName,self.password,self.database)
         cursor = connexion.cursor()
-        param = "%"+ self.clinicalSign +"%"
-        cursor.execute('SELECT stitch_compound_id, cui, concept_name,cui_of_meddra_term,meddra_concept_name FROM meddra_all_indications WHERE concept_name LIKE %s OR meddra_concept_name LIKE %s;',param,param)
+        cursor.execute('SELECT stitch_compound_id, cui, concept_name,cui_of_meddra_term,meddra_concept_name FROM meddra_all_indications WHERE concept_name LIKE "%'+str(self.clinicalSign)+'%" OR meddra_concept_name LIKE "%'+str(self.clinicalSign)+'%";')
         print(cursor.fetchall())
 
 
-#manager = SiderIndicationsManager("Acute abdomen")
-#manager.extractData()
+manager = SiderIndicationsManager("Hypo")
+manager.extractData()
