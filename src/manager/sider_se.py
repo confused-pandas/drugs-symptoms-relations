@@ -22,9 +22,9 @@ class SiderSEManager:
             connection.close()
             return data_SE
        
-manager = SiderSEManager("Acut") 
-manager.extractData()
-print(manager.extractData())    
+#manager = SiderSEManager("Acut") 
+#manager.extractData()
+#print(manager.extractData())    
 
 
 

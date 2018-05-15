@@ -14,11 +14,17 @@ class SiderIndicationsManager:
         self.password = "esial"
 
     def extractData(self):
+        data_indications={}
         connexion = pymysql.connect(self.server,self.userName,self.password,self.database)
-        cursor = connexion.cursor()
-        cursor.execute('SELECT stitch_compound_id, cui, concept_name,cui_of_meddra_term,meddra_concept_name FROM meddra_all_indications WHERE concept_name LIKE "%'+str(self.clinicalSign)+'%" OR meddra_concept_name LIKE "%'+str(self.clinicalSign)+'%";')
-        print(cursor.fetchall())
+        try:
+            with connexion.cursor() as cursor:
+                cursor.execute('SELECT stitch_compound_id,concept_name FROM meddra_all_indications WHERE concept_name LIKE "%'+str(self.clinicalSign)+'%" OR meddra_concept_name LIKE "%'+str(self.clinicalSign)+'%";')
+                data_indications[str(self.clinicalSign)]=cursor.fetchall()
+        finally: 
+            connexion.close()
+            return data_indications
+        #print(cursor.fetchall())
 
 
-manager = SiderIndicationsManager("Hypo")
+manager = SiderIndicationsManager("Failure to Thrive")
 manager.extractData()

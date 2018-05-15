@@ -1,5 +1,5 @@
 from manager.DrugBankManager import DrugBankManager
-from manager.sider_se import SiderSEManager
+from manager.sider_indications import SiderIndicationsManager
 from manager.stitch import StitchManager
 from manager.atc import AtcManager
 from pymysql import cursors
@@ -7,18 +7,18 @@ import sys
 
 class CausingDrugMapping:
     
-    def __init__(self, side_effect):
-        self.side_effect = side_effect
+    def __init__(self, clinical_sign):
+        self.clinical_sign = clinical_sign
         
     def mapping(self):
 
         #sider import
-        data_sider_se=SiderSEManager(self.side_effect).extractData()
-        print(data_sider_se)
+        data_sider_indic=SiderIndicationsManager(self.clinical_sign).extractData()
+        print(data_sider_indic)
         tabCID=[]
-        for i in range(0, len(data_sider_se[self.side_effect])):
-            tabCID.append(data_sider_se[self.side_effect][i]["stitch_compound_id2"])
-        
+        for i in range(0, len(data_sider_indic[self.clinical_sign])):
+            tabCID.append(data_sider_indic[self.clinical_sign][i][0])
+            
         #remove sider duplicates
         tabCIDunique=[]
         tabCIDunique=(list(set(tabCID))) 
@@ -56,8 +56,8 @@ class CausingDrugMapping:
             
 
         #drugbank import
-        (data_drugbank_indication, data_drugbank_toxicity) = DrugBankManager(self.side_effect).extractData()
-        for causingDrug in data_drugbank_toxicity:
+        (data_drugbank_indication, data_drugbank_toxicity) = DrugBankManager(self.clinical_sign).extractData()
+        for causingDrug in data_drugbank_indication:
             drugname.append(causingDrug)
 
         print(drugname)
@@ -66,6 +66,6 @@ class CausingDrugMapping:
             
         
 
-CausingDrugMapping("Acute abdomen").mapping()
+CausingDrugMapping("failure to thrive").mapping()
             
         
