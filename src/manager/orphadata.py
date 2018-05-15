@@ -1,60 +1,39 @@
 import couchdb
 
+
 class OrphaDataManager:
 
-    def __init__(self):
-        self.couchserver = couchdb.Server("http://couchdb.telecomnancy.univ-lorraine.fr/")
+    def __init__(self, item):
+        self.item = item
+        self.couchServer = couchdb.Server('http://couchdb.telecomnancy.univ-lorraine.fr')
         self.dbname = 'orphadatabase'
-        self.db = self.couchserver[self.dbname]
+        self.db = self.couchServer[self.dbname]
+        self.view_cs = 'clinicalsigns/GetDiseaseByClinicalSign'
+        self.view_disease = 'diseases/GetDiseases'
 
-
-    def parseOrpha(self):
-        for elem in self.db.view("clinicalsigns/GetDiseaseByClignicalSign"):
+    def extractNameFromCs(self):
+        data_orpha = []
+        for elem in self.db.view(self.view_cs, key=self.item):
             value = elem.value
-            clinicalSign = value["clinicalSign"]
-            clinicalSignName = clinicalSign["Name"]["text"]
-            disease = value["disease"]
+            disease=value["disease"]
             diseaseName = disease["Name"]["text"]
-            if clinicalSignName in self.orphadataDict :
-                self.orphadataDict[clinicalSignName].append(diseaseName)  
-            else :
-                self.orphadataDict[clinicalSignName] = [diseaseName]
-                self.syndromes.append(clinicalSignName)
+            data_orpha.append(diseaseName)
+        return data_orpha
 
 
-            def searchDiseaseOrphadata(self,syndrome) :
-                if(syndrome in self.orphadataDict):
-                    return self.orphadataDict[syndrome]
-                else :
-                    return []
-                    
-           
-       
+    def extractNameFromId(self):
+        diseaseName = ""
+        for elem in self.db.view(self.view_disease, key=self.item):
+            value = elem.value
+            diseaseName = value["Name"]["text"]
+        return diseaseName
+
+    
+    
         
-
-
-
-    s = OrphaDataManager()
-    syndrome = "Abnormal colour of the urine/cholic/dark urines"
-    disease = s.searchDiseaseOrphadata(syndrome)
-    print(disease)
-    print("-------------------")
-    liste = list()
-    for elmt in mydb.view("clinicalsigns/GetDiseaseByClinicalSign") :
-        value = elmt.value
-        clinicalSign = value["clinicalSign"]
-        clinicalSignName = clinicalSign["Name"]["text"]
-        if clinicalSignName == syndrome :
-            disease = value["disease"]
-            diseaseName = disease["Name"]["text"]
-            liste.append(diseaseName)
-    print(liste)
-    print(len(liste))
-    print()
-    print(len(s.syndromes))
-    totalElements = 0
-    for syndrome in s.syndromes :
-        totalElements += len(s.searchDiseaseOrphadata(syndrome))
-    print("Total element {}".format(totalElements))
-        
-
+            
+            
+manager = OrphaDataManager(1052).extractNameFromId()
+print(manager)
+#manager = OrphaDataManager("Xerophthalmia/dry eyes")
+#print(manager.extractNameFromCs())
