@@ -15,7 +15,7 @@ class HpoAnnotationsManager:
         data_hpo[str(self.hpId)] = cur.fetchall()
         return data_hpo
 
-#manager = HpoAnnotationsManager('HP:0000157')
+#manager = HpoAnnotationsManager('HP:0003593')
 #l=manager.extractData()
 #print(l)   
 
