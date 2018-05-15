@@ -23,11 +23,11 @@ class DrugBankManager:
         writer = ix.writer()
         file = self.file
         line = file.readline()
-        print(line)
+        #print(line)
         nameSaved = False
         toxicitySaved = False
         indicationSaved = False
-        print(line)
+        #print(line)
         while not line.startswith("</drugbank>"):
             if(line.startswith("<drug type=")):
                 #drugbank_id="null"
@@ -46,12 +46,12 @@ class DrugBankManager:
                         name = line[8:]
                         name = name[:-8]
                         nameSaved = True
-                        print("name = " + name)
+                        #print("name = " + name)
                     if line.startswith("  <indication>") and not indicationSaved:
                         indication = line[14:]
                         indication = indication[:-14]
                         indicationSaved = True
-                        print("indication = " + indication)
+                        #print("indication = " + indication)
                     if line.startswith("  <toxicity>") and not toxicitySaved:
                         toxicity = line[12:]
                         toxicity = toxicity[:-12]
@@ -59,12 +59,12 @@ class DrugBankManager:
                         print("toxicity = " + toxicity)
                     line = file.readline()
                 if(not name.startswith("null") and not indication.startswith("null") and not toxicity.startswith("null")):
-                    print("name = " + name + " indication = " +  indication + " toxicity = " + toxicity)
+                    #print("name = " + name + " indication = " +  indication + " toxicity = " + toxicity)
                     writer.add_document(name=name, indication=indication, toxicity=toxicity)
             else:
                 line = file.readline()
         writer.commit()
-        print("end")
+        #print("end")
 
 # Extract data from hp.obo and store it in a dictionnary
     def extractData(self):

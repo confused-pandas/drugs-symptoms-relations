@@ -22,7 +22,7 @@ class SiderMeddraManager:
             with connection.cursor() as cursor:
                 cursor.execute('SELECT cui FROM meddra WHERE label=%s;',str(self.clinicalSign))
                 data_meddra[str(self.clinicalSign)] = cursor.fetchall()
-                print(data_meddra)
+                #print(data_meddra)
         finally:
             connection.close()
        

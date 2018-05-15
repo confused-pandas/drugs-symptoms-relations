@@ -15,7 +15,7 @@ class DiseaseMapping:
     def mapping(self):
         data_omim_text = OmimTextManager(self.clignical_sign).extractDataFromCs()
         data_hpo = HpoManager(self.clignical_sign).extractDataFromSynonym()
-        
+        diseaseList = []
 
         list_orpha = OrphaDataManager(self.clignical_sign).extractNameFromCs()
         for elem in list_orpha:
@@ -65,6 +65,7 @@ class DiseaseMapping:
         # Search in omim
         for key in data_omim_text.keys():
             disease_name = data_omim_text[str(key)]
+            diseaseList.append(disease_name)
             print("OMIM -> |"+key+"|"+ "----SOURCE -> |"+"OMIM.TXT")
             print("NAME -> |"+disease_name)
             print("------------------------------------------------------------------------")
@@ -78,6 +79,6 @@ class DiseaseMapping:
             print("Quality of Mapping between omim.txt and hpo_annotations.sqlite : ", q, "%")
         
             
-        
+        return diseaseList
     
-DiseaseMapping(sys.argv[1]).mapping()
+#DiseaseMapping(sys.argv[1]).mapping()

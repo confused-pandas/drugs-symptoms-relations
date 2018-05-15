@@ -33,7 +33,7 @@ class OrphaDataManager:
         
             
             
-manager = OrphaDataManager(1052).extractNameFromId()
-print(manager)
+#manager = OrphaDataManager(1052).extractNameFromId()
+#print(manager)
 #manager = OrphaDataManager("Xerophthalmia/dry eyes")
 #print(manager.extractNameFromCs())

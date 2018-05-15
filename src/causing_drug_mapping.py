@@ -14,7 +14,7 @@ class CausingDrugMapping:
 
         #sider import
         data_sider_se=SiderSEManager(self.side_effect).extractData()
-        print(data_sider_se)
+        #print(data_sider_se)
         tabCID=[]
         for i in range(0, len(data_sider_se[self.side_effect])):
             tabCID.append(data_sider_se[self.side_effect][i]["stitch_compound_id2"])
@@ -60,12 +60,12 @@ class CausingDrugMapping:
         for causingDrug in data_drugbank_toxicity:
             drugname.append(causingDrug)
 
-        print(drugname)
+        #print(drugname)
         return drugname
        
             
         
 
-CausingDrugMapping("Acute abdomen").mapping()
+#CausingDrugMapping("Acute abdomen").mapping()
             
         

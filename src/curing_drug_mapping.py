@@ -5,7 +5,7 @@ from manager.atc import AtcManager
 from pymysql import cursors
 import sys
 
-class CausingDrugMapping:
+class CuringDrugMapping:
     
     def __init__(self, clinical_sign):
         self.clinical_sign = clinical_sign
@@ -14,7 +14,6 @@ class CausingDrugMapping:
 
         #sider import
         data_sider_indic=SiderIndicationsManager(self.clinical_sign).extractData()
-        print(data_sider_indic)
         tabCID=[]
         for i in range(0, len(data_sider_indic[self.clinical_sign])):
             tabCID.append(data_sider_indic[self.clinical_sign][i][0])
@@ -57,15 +56,15 @@ class CausingDrugMapping:
 
         #drugbank import
         (data_drugbank_indication, data_drugbank_toxicity) = DrugBankManager(self.clinical_sign).extractData()
-        for causingDrug in data_drugbank_indication:
-            drugname.append(causingDrug)
+        for curingDrug in data_drugbank_indication:
+            drugname.append(curingDrug+"DB")
 
-        print(drugname)
+        #print(drugname)
         return drugname
        
             
         
 
-CausingDrugMapping("failure to thrive").mapping()
+#CausingDrugMapping("failure to thrive").mapping()
             
         

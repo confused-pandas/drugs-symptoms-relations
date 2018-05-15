@@ -25,7 +25,7 @@ class AtcManager:
         while line != "":
             atc_id = line[1:].lstrip().split(' ', 1)[0]
             if len(line[1:].lstrip().split(' ', 1)) == 2:
-                label = line[1:].lstrip().split(' ', 1)[1].replace('\n', '')
+                label = line[1:].lstrip().split(' ',1)[1].replace('\n', '')
             else:
                 label = u"None"
             if atc_id == '':
@@ -39,7 +39,7 @@ class AtcManager:
         data_atc = {}
         r = parserQuery(self, self.atc, "atc_id")
         for elem in r:
-            data_atc["atc_id"] = elem.get("label")[1:]
+            data_atc["atc_id"] = elem.get("label").lstrip()
         return data_atc
 
 

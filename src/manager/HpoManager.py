@@ -48,7 +48,7 @@ class HpoManager:
         r = self.parserQuery()
         for elem in r:
             data_hpo[elem.get("umls")[:-1]] = elem.get("synonym")[:-21], elem.get("name")[:-1], elem.get("is_a")[:7]
-        print(data_hpo)
+        #print(data_hpo)
         return
 
     def parserQuery(self):

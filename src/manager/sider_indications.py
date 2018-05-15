@@ -26,5 +26,5 @@ class SiderIndicationsManager:
         #print(cursor.fetchall())
 
 
-manager = SiderIndicationsManager("Failure to Thrive")
-manager.extractData()
+#manager = SiderIndicationsManager("Failure to Thrive")
+#manager.extractData()
