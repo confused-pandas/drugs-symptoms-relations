@@ -28,6 +28,7 @@ class CausingDrugMapping:
         print(data_stitch)
         
         
+        
 CausingDrugMapping("Acute abdomen").mapping()
             
         
