@@ -21,5 +21,5 @@ class SiderIndicationsManager:
         print(cursor.fetchall())
 
 
-#manager = SiderIndicationsManager("Acute abdomen")
-#manager.extractData()
+manager = SiderIndicationsManager("Acute abdomen")
+manager.extractData()

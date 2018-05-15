@@ -8,8 +8,8 @@ class OmimOntoManager:
 
     def __init__(self, item):
         self.item = item
-        self.path = '../res/database/omim/omim_onto.csv'
-        self.path_index = '../res/database/omim/index_omim_onto.csv'
+        self.path = './res/database/omim/omim_onto.csv'
+        self.path_index = './res/database/omim/index_omim_onto.csv'
         self.schema = Schema(cui=TEXT(stored=True), omim=TEXT(stored=True))
 
     def index_initialisation(self):

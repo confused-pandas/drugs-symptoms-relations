@@ -10,9 +10,9 @@ class HpoManager:
 
     def __init__(self, synonym):
         self.synonym = synonym
-        self.file = open('../res/database/hpo/hp.obo')
-        self.path_index = "../res/database/hpo/index_hpo"
-        self.path_index_synonym = "../res/database/hpo/index_hpo_synonym"
+        self.file = open('./res/database/hpo/hp.obo')
+        self.path_index = "./res/database/hpo/index_hpo"
+        self.path_index_synonym = "./res/database/hpo/index_hpo_synonym"
         self.schema = Schema(id=TEXT(stored=True), name=TEXT(stored=True), synonym=TEXT(stored=True), cui=TEXT(stored=True), is_a=TEXT(stored=True))
 
     # Create the index

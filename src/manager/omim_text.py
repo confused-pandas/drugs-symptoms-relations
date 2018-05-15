@@ -10,8 +10,8 @@ class OmimTextManager:
 
     def __init__(self, item):
         self.item = item
-        self.file = open('../res/database/omim/omim.txt')
-        self.path_index = "../res/database/omim/index_omim"
+        self.file = open('./res/database/omim/omim.txt')
+        self.path_index = "./res/database/omim/index_omim"
         self.schema = Schema(omim_id=TEXT(stored=True), cs=TEXT(stored=True), title=TEXT(stored=True))
 
     # Create the index

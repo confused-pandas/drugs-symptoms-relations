@@ -13,8 +13,8 @@ class StitchManager:
 
     def __init__(self, stitchId):
         self.stitchId = stitchId
-        self.path = '../res/database/stitch/chemical.sources.tsv'
-        self.path_index = '../res/database/stitch/index_stitch'
+        self.path = './res/database/stitch/chemical.sources.tsv'
+        self.path_index = './res/database/stitch/index_stitch'
         self.schema = Schema(stitch_id=TEXT(stored=True), atc=TEXT(stored=True))
   
     

@@ -7,9 +7,9 @@ class AtcManager:
 
     def __init__(self, atc):
         self.atc = atc
-        self.file = open('../res/database/atc/br08303.keg')
-        self.path = '../res/database/atc/br08303.keg'
-        self.path_index = '../res/database/atc/index_atc'
+        self.file = open('./res/database/atc/br08303.keg')
+        self.path = './res/database/atc/br08303.keg'
+        self.path_index = './res/database/atc/index_atc'
         self.schema = Schema(atc_id=TEXT(stored=True), label=TEXT(stored=True))
 
     
