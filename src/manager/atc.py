@@ -39,7 +39,7 @@ class AtcManager:
         data_atc = {}
         r = parserQuery(self, self.atc, "atc_id")
         for elem in r:
-            data_atc[self.atc] = elem.get("label")[1:]
+            data_atc["atc_id"] = elem.get("label")[1:]
         return data_atc
 
 
@@ -52,6 +52,6 @@ def parserQuery(self, item, schema_item):
     return results
 
 
-manager = AtcManager("D01474")
+#manager = AtcManager("D01474")
 #manager.index_initialisation()
-manager.extractDataFromAtc()
+#manager.extractDataFromAtc()

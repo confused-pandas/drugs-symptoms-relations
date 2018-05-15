@@ -64,8 +64,8 @@ def parserQuery(self, path, item, schema_item):
     return results
  
 
-manager = StitchManager("00001991")
-manager.index_initialisation()
+manager = StitchManager("000004205")
+#manager.index_initialisation()
 print(manager.extractDataFromStitchId())
 
 """exemple sticht_coumpound_id pour tester :
