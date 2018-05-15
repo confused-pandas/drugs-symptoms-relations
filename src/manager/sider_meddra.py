@@ -26,8 +26,8 @@ class SiderMeddraManager:
         finally:
             connection.close()
        
-manager = SiderMeddraManager("Acute abdomen") 
-manager.extractData()
+#manager = SiderMeddraManager("Acute abdomen") 
+#manager.extractData()
 
 
     

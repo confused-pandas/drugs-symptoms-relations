@@ -5,7 +5,7 @@ class HpoAnnotationsManager:
 
     def __init__(self, hpId):
         self.hpId = hpId
-        self.path = "./res/database/hpo/hpo_annotations.sqlite"
+        self.path = "../res/database/hpo/hpo_annotations.sqlite"
 
     def extractData(self):
         data_hpo = {}

@@ -10,8 +10,8 @@ class HpoManager:
 
     def __init__(self, synonym):
         self.synonym = synonym
-        self.file = open('../../res/database/hpo/hp.obo')
-        self.path_index = "../../res/database/hpo/index_hpo"
+        self.file = open('../res/database/hpo/hp.obo')
+        self.path_index = "../res/database/hpo/index_hpo"
         self.schema = Schema(name=TEXT(stored=True), synonym=TEXT(stored=True), umls=TEXT(stored=True), is_a=TEXT(stored=True))
 
     # Create the index
@@ -58,6 +58,6 @@ class HpoManager:
         results[0]
         return results
 
-manager = HpoManager("Abnormality of body height")
-ix, writer = manager.index_initialisation()
-manager.extractData(ix, writer)
+#manager = HpoManager("Abnormality of body height")
+#ix, writer = manager.index_initialisation()
+#manager.extractData(ix, writer)
