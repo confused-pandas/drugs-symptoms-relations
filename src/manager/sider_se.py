@@ -14,7 +14,7 @@ class SiderSEManager:
         connection = pymysql.connect(self.server,self.userName,self.password,self.database, cursorclass=pymysql.cursors.DictCursor)
         try:
             with connection.cursor() as cursor:
-                cursor.execute('SELECT stitch_compound_id1, stitch_compound_id2, cui, meddra_concept_type, cui_of_meddra_term FROM meddra_all_se WHERE side_effect_name=%s;',str(self.clinicalSign))
+                cursor.execute('SELECT stitch_compound_id1, stitch_compound_id2, cui, meddra_concept_type, cui_of_meddra_term FROM meddra_all_se WHERE side_effect_name LIKE "%'+str(self.clinicalSign)+'%";')
                 #cmd="SELECT stitch_compound_id1, stitch_compound_id2, cui, meddra_concept_type, cui_of_meddra_term FROM meddra_all_se WHERE side_effect_name LIKE %%%s%;"%(str(self.clinicalSign))
                 #cursor.execute(cmd)
                 data_SE[str(self.clinicalSign)] = cursor.fetchall()
@@ -22,9 +22,9 @@ class SiderSEManager:
             connection.close()
             return data_SE
        
-#manager = SiderSEManager("Acute abdomen") 
-#manager.extractData()
-#print(manager.extractData())    
+manager = SiderSEManager("Acut") 
+manager.extractData()
+print(manager.extractData())    
 
 
 
