@@ -25,21 +25,22 @@ class CausingDrugMapping:
         for i in range(0, len(tabCIDunique)):
             data_stitch[str(tabCIDunique[i])]=StitchManager(str(tabCIDunique[i])).extractDataFromStitchId()
         
-        print(data_stitch)
+        #print(data_stitch)
         data_ATC=[]
-        for i in range (0, len(data_stitch[str(tabCIDunique[i])])):
-            if not(data_stitch[str(tabCIDunique[i])][i]=={}):
-                data_ATC.append(data_stitch[str(tabCIDunique[i])][i][str(tabCIDunique[i])])
-        
+
+        for i in range (0, len(data_stitch)):
+            if any(data_stitch[str(tabCIDunique[i])]):
+                data_ATC.append(data_stitch[str(tabCIDunique[i])][str(tabCIDunique[i])])
         data_ATC_unique=(list(set(data_ATC)))
-        
+        #print(data_ATC_unique)
         data_drugname=[]
+        
         for atc in data_ATC_unique:
-            data_drugname=AtcManager(str(atc)).extractDataFromAtc()
-            
+            data_drugname.append(AtcManager(str(atc)).extractDataFromAtc())
+        #print(data_drugname)
         drugname=[]
         for elm in data_drugname:
-            drugname.append(data_drugname[elem][1])
+            drugname.append(elm['atc_id'])
             
         print(drugname)
         return drugname
