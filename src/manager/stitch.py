@@ -13,8 +13,8 @@ class StitchManager:
 
     def __init__(self, stitchId):
         self.stitchId = stitchId
-        self.path = './res/database/stitch/chemical.sources.tsv'
-        self.path_index = './res/database/stitch/index_stitch'
+        self.path = '../res/database/stitch/chemical.sources.tsv'
+        self.path_index = '../res/database/stitch/index_stitch'
         self.schema = Schema(stitch_id=TEXT(stored=True), atc=TEXT(stored=True))
   
     
@@ -30,9 +30,9 @@ class StitchManager:
         for ligne in reader:
             cpt+=1
             if cpt>10 and cpt<10000:
-                stitch_id = unicode(ligne[0][4:])
+                stitch_id = ligne[0][4:]
                 if ligne[2]=='ATC':
-                    atc = unicode(ligne[3])
+                    atc = ligne[3]
                 else: 
                     atc = u"None"
                     break

@@ -8,8 +8,8 @@ class DrugBankManager:
     """
     def __init__(self, clinicalSign):
         self.clinicalSign = clinicalSign
-        self.file = open('../../res/database/drugbank/drugbank.xml')
-        self.path_index = "../../res/database/drugbank/index_drugbank"
+        self.file = open('../res/database/drugbank/drugbank.xml')
+        self.path_index = "../res/database/drugbank/index_drugbank"
         self.schema = Schema(drugbank_id=TEXT(stored=True), name=TEXT(stored=True), indication=TEXT(stored=True), toxicity=TEXT(stored=True))
 
 
@@ -48,7 +48,7 @@ class DrugBankManager:
                         indication = line[14:]
                         indication.lstrip()
                         indication.replace("</indication>","")
-                        print("indication = " + indication + "\n")
+                        print("indication = " + indication)
                     if line.startswith("<toxicity>"):
                         toxicity = line[12:]
                         toxicity.lstrip()
