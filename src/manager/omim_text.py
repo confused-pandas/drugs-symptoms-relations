@@ -8,8 +8,8 @@ class OmimTextManager:
         from the Omim.txt file
     """
 
-    def __init__(self, clignical_sign):
-        self.clignical_sign = clignical_sign
+    def __init__(self, item):
+        self.item = item
         self.file = open('./res/database/omim/omim.txt')
         self.path_index = "./res/database/omim/index_omim"
         self.schema = Schema(omim_id=TEXT(stored=True), cs=TEXT(stored=True), title=TEXT(stored=True))
@@ -21,11 +21,6 @@ class OmimTextManager:
         ix = create_in(self.path_index, self.schema)
         ix = open_dir(self.path_index)
         writer = ix.writer()
-        return ix, writer
-        
-    # Extract data from Omim.txt and store it in a dictionnary
-    def extractData(self, ix, writer):
-        data_omimt = {}
         file = self.file
         line = file.readline()
         while line != "":
@@ -48,22 +43,35 @@ class OmimTextManager:
                     line = file.readline()
                 writer.add_document(omim_id=id, cs=clign, title=titre)
             line = file.readline()
-
-        writer.commit()                   
-        r = parserQuery(self.clignical_sign)
+        writer.commit()
+        
+    # Extract data from Omim.txt and store it in a dictionnary
+    def extractDataFromCs(self):
+        data_omimt = {}                   
+        r = parserQuery(self, self.item, "cs")
         for elem in r:
-            data_omimt[self.clignical_sign] = elem.get("omim_id"), elem.get("title")[7:]
-        print(data_omimt)
+            data_omimt[elem.get("omim_id")] = elem.get("title")[7:].lstrip()
+        return data_omimt
+
+    def extractDataFromOmim(self):
+        data_omimt = {}
+        r = parserQuery(self, self.item, "omim_id")
+        for elem in r:
+            data_omimt[self.item] = elem.get("title")[7:].lstrip()
+        return data_omimt
 
 
 
-def parserQuery(cs):
+def parserQuery(self, item, schema_item):
+    ix = open_dir(self.path_index)
     searcher = ix.searcher()
-    query = QueryParser("cs", ix.schema).parse(cs)
+    query = QueryParser(schema_item, ix.schema).parse(item)
     results = searcher.search(query)
-    results[0]
     return results
 
-manager = OmimTextManager("Normocephaly")
-ix, writer = manager.index_initialisation()
-manager.extractData(ix, writer)
+
+
+#manager = OmimTextManager("100100")
+#manager.index_initialisation()
+#l = manager.extractDataFromOmim()
+#print(l["100100"].replace(';','|'))

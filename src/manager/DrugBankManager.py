@@ -20,36 +20,53 @@ class DrugBankManager:
         ix = create_in(self.path_index, self.schema)
         ix = open_dir(self.path_index)
         writer = ix.writer()
+        file = self.file
+        line = file.readline()
+        nameSaved = False
+        print(line)
+        while line != "":
+            if(line.startswith("<drug type=")):
+                line = file.readline()
+                print(line)
+                while not line.startswith("</drug>"):
+                    drugbank_id="null"
+                    name="null"
+                    indication="null"
+                    toxicity="null"
+                    line.lstrip()
+                    if line.startswith("<drugbank-id primary="):
+                        drugbank_id = line[28:]
+                        drugbank_id.replace("</drugbank-id>\n","")
+                        print(line)
+                    if line.startswith("  <name>")  and not nameSaved:
+                        name = line[8:]
+                        name.lstrip()
+                        name.replace("</name>\n","")
+                        nameSaved = True
+                        print("name = " + name)
+                    if line.startswith("  <indication>"):
+                        indication = line[14:]
+                        indication.lstrip()
+                        indication.replace("</indication>","")
+                        print("indication = " + indication + "\n")
+                    if line.startswith("<toxicity>"):
+                        toxicity = line[12:]
+                        toxicity.lstrip()
+                        toxicity.replace("</toxicity>\n","")
+                        print("toxicity = " + toxicity)
+                    writer.add_document(drugbank_id=drugbank_id, name=name, indication=indication, toxicity=toxicity)
+                    line = file.readline()
+            else:
+                line = file.readline()
+        writer.commit()
         return ix, writer
 
 # Extract data from hp.obo and store it in a dictionnary
     def extractData(self, ix, writer):
         data_drugbank = {}
-        file = self.file
-        line = file.readline()
-        while line != "":
-            if(line[:4].startswith("<drug")):
-                while line[:4].startswith("</drug>")==False:
-                    if line[:28].startswith("<drugbank-id primary=\"true\">"):
-                        drugbank_id = line[28:]
-                        drugbank_id.replace("</drugbank-id>\n","")
-                    if line[:6].startswith("<name>"):
-                        name = line[6:]
-                        name.replace("</name>\n","")
-                    if line[:12].startswith("<indication>"):
-                        indication = line[12:]
-                        indication.replace("</indication>\n","")
-                    if line[:10].startswith("<toxicity>"):
-                        toxicity = line[10:]
-                        toxicity.replace("</toxicity>\n","")
-                        writer.add_document(drugbank_id=drugbank_id, name=name, indication=indication, toxicity=toxicity)
-                    line = file.readline()
-            else:
-                line = file.readline()
-        writer.commit()
         r = self.parserQuery()
-        '''for elem in r:
-            data_drugbank[elem.get("drugbank-id")[:-1]] = elem.get("name")[:-21], elem.get("name")[:-1], elem.get("is_a")[:7]'''
+        for elem in r:
+            data_drugbank[elem.get("drugbank-id")[:-1]] = elem.get("name")[:-21], elem.get("name")[:-1], elem.get("is_a")[:7]
         print(data_drugbank)
 
     def parserQuery(self):

@@ -4,7 +4,7 @@ Created on Tue May 08 14:52:36 2018
 
 @author: mlysr
 """
-import pymysql.cursors
+import pymysql
 
 class SiderMeddraManager:
     
