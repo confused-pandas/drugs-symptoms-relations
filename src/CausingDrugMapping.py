@@ -24,5 +24,10 @@ class CausingDrugMapping:
         data_stitch={}
         for i in range(0, len(tabCIDunique)):
             data_stitch[tabCIDunique[i]]=StitchManager(tabCIDunique[i])
+        
+        print(data_stitch)
+        
+        
+CausingDrugMapping("Acute abdomen").mapping()
             
         
