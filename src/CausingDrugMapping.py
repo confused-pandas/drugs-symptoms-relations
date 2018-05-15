@@ -42,7 +42,7 @@ class CausingDrugMapping:
         for elm in data_drugname:
             drugname.append(elm['atc_id'])
             
-        print(drugname)
+        #print(drugname)
         return drugname
        
             
