@@ -10,76 +10,87 @@ class DrugBankManager:
         self.clinicalSign = clinicalSign
         self.file = open('../res/database/drugbank/drugbank.xml')
         self.path_index = "../res/database/drugbank/index_drugbank"
-        self.schema = Schema(drugbank_id=TEXT(stored=True), name=TEXT(stored=True), indication=TEXT(stored=True), toxicity=TEXT(stored=True))
-
+        self.schema = Schema(name=TEXT(stored=True), indication=TEXT(stored=True), toxicity=TEXT(stored=True))
+        if not os.path.exists(self.path_index):
+            os.mkdir(self.path_index)
+        self.ix = create_in(self.path_index, self.schema)
+        self.ix = open_dir(self.path_index)
 
 # Create the index
     def index_initialisation(self):
-        if not os.path.exists(self.path_index):
-            os.mkdir(self.path_index)
-        ix = create_in(self.path_index, self.schema)
-        ix = open_dir(self.path_index)
-        writer = ix.writer()
+        writer = self.ix.writer()
         file = self.file
         line = file.readline()
         nameSaved = False
+        toxicitySaved = False
+        indicationSaved = False
         print(line)
-        while line != "":
+        while not line.startswith("</drugbank>"):
             if(line.startswith("<drug type=")):
+                drugbank_id="null"
+                name="null"
+                indication="null"
+                toxicity="null"
                 line = file.readline()
-                print(line)
+                #print(line)
                 while not line.startswith("</drug>"):
-                    drugbank_id="null"
-                    name="null"
-                    indication="null"
-                    toxicity="null"
                     line.lstrip()
-                    if line.startswith("<drugbank-id primary="):
-                        drugbank_id = line[28:]
-                        drugbank_id.replace("</drugbank-id>\n","")
-                        print(line)
+                    #if line.startswith("<drugbank-id primary="):
+                        #drugbank_id = line[28:]
+                        #drugbank_id.replace("</drugbank-id>\n","")
+                        #print(line)
                     if line.startswith("  <name>")  and not nameSaved:
                         name = line[8:]
-                        name.lstrip()
-                        name.replace("</name>\n","")
+                        name = name[:-8]
                         nameSaved = True
-                        print("name = " + name)
-                    if line.startswith("  <indication>"):
+                        #print("name = " + name)
+                    if line.startswith("  <indication>") and not indicationSaved:
                         indication = line[14:]
-                        indication.lstrip()
-                        indication.replace("</indication>","")
-                        print("indication = " + indication)
-                    if line.startswith("<toxicity>"):
+                        indication = indication[:-14]
+                        indicationSaved = True
+                        #print("indication = " + indication)
+                    if line.startswith("  <toxicity>") and not toxicitySaved:
                         toxicity = line[12:]
-                        toxicity.lstrip()
-                        toxicity.replace("</toxicity>\n","")
-                        print("toxicity = " + toxicity)
-                    writer.add_document(drugbank_id=drugbank_id, name=name, indication=indication, toxicity=toxicity)
+                        toxicity = toxicity[:-12]
+                        toxicitySaved = True
+                        #print("toxicity = " + toxicity)
                     line = file.readline()
+                if(not name.startswith("null") and not indication.startswith("null") and not toxicity.startswith("null")):
+                    print("name = " + name + " indication = " +  indication + " toxicity = " + toxicity)
+                    writer.add_document(name=name, indication=indication, toxicity=toxicity)
             else:
                 line = file.readline()
         writer.commit()
-        return ix, writer
+        print("end")
 
 # Extract data from hp.obo and store it in a dictionnary
-    def extractData(self, ix, writer):
-        data_drugbank = {}
-        r = self.parserQuery()
-        for elem in r:
-            data_drugbank[elem.get("drugbank-id")[:-1]] = elem.get("name")[:-21], elem.get("name")[:-1], elem.get("is_a")[:7]
-        print(data_drugbank)
+    def extractData(self):
+        data_indication_drugbank = {}
+        data_toxicity_drugbank = {}
+        (r1,r2) = self.parserQuery()
+        for elem in r1:
+            data_indication_drugbank[elem.get("name")] = elem.get("indication")
+        for elem in r2:
+            data_toxicity_drugbank[elem.get("name")] = elem.get("toxicity")
+        print(data_indication_drugbank)
+        print(data_toxicity_drugbank)
 
     def parserQuery(self):
-        searcher = ix.searcher()
-        indicationQuery = QueryParser("indication", ix.schema).parse(self.clinicalSign)
-        toxicityQuery = QueryParser("toxicity", ix.schema).parse(self.clinicalSign)
+        searcher = self.ix.searcher()
+        print(self.clinicalSign)
+        indicationQuery = QueryParser("name", (self.ix).schema).parse(self.clinicalSign)
+        toxicityQuery = QueryParser("name", (self.ix).schema).parse(self.clinicalSign)
         indicationResults = searcher.search(indicationQuery)
         toxicityResults = searcher.search(toxicityQuery)
+        #print("indication len = " + str(len(indicationResults)))
+        #print(searcher.search(nameQuery)[0])
         indicationResults[0]
         toxicityResults[0]
-        return indicationResults
+        return (indicationResults, toxicityResults)
 
 manager = DrugBankManager("thrombocytopenia")
-ix, writer = manager.index_initialisation()
-manager.extractData(ix, writer)
+#manager.index_initialisation()
+manager.extractData()
+
+
 

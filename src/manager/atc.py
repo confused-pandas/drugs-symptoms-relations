@@ -18,7 +18,6 @@ class AtcManager:
         self.ix = open_dir(self.path_index)
     
     def index_initialisation(self):
-        
         writer = self.ix.writer()
         file = self.file
         for i in range(0,9):
@@ -49,9 +48,10 @@ def parserQuery(self, item, schema_item):
     searcher = self.ix.searcher()
     query = QueryParser(schema_item, self.ix.schema).parse(item)
     results = searcher.search(query)
+    #print(results[0])
     return results
 
 
 manager = AtcManager("D01474")
 manager.index_initialisation()
-manager.extractDataFromAtc()
+print(manager.extractDataFromAtc())
