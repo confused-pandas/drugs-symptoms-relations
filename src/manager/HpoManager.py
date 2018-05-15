@@ -4,14 +4,14 @@ from whoosh.fields import *
 from whoosh.qparser import QueryParser
 
 class HpoManager:
-    """"HpoManager extract the name of a disease, the synonyms and the umls + is_a 
+    """"HpoManager extracts the name of a disease, the synonyms and the umls + is_a 
         from the hp.obo file
     """
 
     def __init__(self, synonym):
         self.synonym = synonym
-        self.file = open('./res/database/hpo/hp.obo')
-        self.path_index = "./res/database/hpo/index_hpo"
+        self.file = open('../../res/database/hpo/hp.obo')
+        self.path_index = "../../res/database/hpo/index_hpo"
         self.schema = Schema(name=TEXT(stored=True), synonym=TEXT(stored=True), umls=TEXT(stored=True), is_a=TEXT(stored=True))
 
     # Create the index
@@ -45,14 +45,15 @@ class HpoManager:
             line = file.readline()
 
         writer.commit()
-        r = parserQuery(self.synonym)
+        r = self.parserQuery()
         for elem in r:
             data_hpo[elem.get("umls")[:-1]] = elem.get("synonym")[:-21], elem.get("name")[:-1], elem.get("is_a")[:7]
         print(data_hpo)
+        return
 
-    def parserQuery(um):
+    def parserQuery(self):
         searcher = ix.searcher()
-        query = QueryParser("synonym", ix.schema).parse(um)
+        query = QueryParser("synonym", ix.schema).parse(self.synonym)
         results = searcher.search(query)
         results[0]
         return results

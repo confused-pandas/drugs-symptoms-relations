@@ -1,25 +1,68 @@
 import os, os.path
-from whoosh import index as ind
+from whoosh.index import *
 from whoosh.fields import *
-import codecs
-clinicalSign = u"thrombocytopenia" #for the example
-filePath=u"/Users/AnissaBokhamy/Documents/Cours/2A/Semestre4/GMD/Projet/gmd-project/res/database/drugbank/drugbank.xml"
-#schema necessary to know what type of info will be treated
-schema = Schema(title=TEXT(stored=True),content=TEXT)
-if not os.path.exists("drugbank_index"):
-    os.mkdir("drugbank_index") #creates a storage object to contain the index
-ix = ind.create_in("drugbank_index",schema) #creating an index in the dir index with the use of the schema
-ix = ind.open_dir("drugbank_index") #opening the index in order to use it
-writer = ix.writer() #creating an IndexWriter object that enables adding documents to the index
-with codecs.open(filePath, "r","utf-8") as f:
-    content = f.read()
-    f.close()
-    writer.add_document(title=filePath, content=content)
-writer.commit() #saves the documents into the index
-
 from whoosh.qparser import QueryParser
-query = QueryParser("<indication>",ix.schema)
-queryResult = query.parse(clinicalSign)
-with ix.searcher() as searcher:
-    results = searcher.search(queryResult)
-print(results[0])
+
+class DrugBankManager:
+    """"DrugBankManager extracts the name of a disease, the synonyms and the umls from the hp.obo file
+    """
+    def __init__(self, clinicalSign):
+        self.clinicalSign = clinicalSign
+        self.file = open('../../res/database/drugbank/drugbank.xml')
+        self.path_index = "../../res/database/drugbank/index_drugbank"
+        self.schema = Schema(drugbank_id=TEXT(stored=True), name=TEXT(stored=True), indication=TEXT(stored=True), toxicity=TEXT(stored=True))
+
+
+# Create the index
+    def index_initialisation(self):
+        if not os.path.exists(self.path_index):
+            os.mkdir(self.path_index)
+        ix = create_in(self.path_index, self.schema)
+        ix = open_dir(self.path_index)
+        writer = ix.writer()
+        return ix, writer
+
+# Extract data from hp.obo and store it in a dictionnary
+    def extractData(self, ix, writer):
+        data_drugbank = {}
+        file = self.file
+        line = file.readline()
+        while line != "":
+            if(line[:4].startswith("<drug")):
+                while line[:4].startswith("</drug>")==False:
+                    if line[:28].startswith("<drugbank-id primary=\"true\">"):
+                        drugbank_id = line[28:]
+                        drugbank_id.replace("</drugbank-id>\n","")
+                    if line[:6].startswith("<name>"):
+                        name = line[6:]
+                        name.replace("</name>\n","")
+                    if line[:12].startswith("<indication>"):
+                        indication = line[12:]
+                        indication.replace("</indication>\n","")
+                    if line[:10].startswith("<toxicity>"):
+                        toxicity = line[10:]
+                        toxicity.replace("</toxicity>\n","")
+                        writer.add_document(drugbank_id=drugbank_id, name=name, indication=indication, toxicity=toxicity)
+                    line = file.readline()
+            else:
+                line = file.readline()
+        writer.commit()
+        r = self.parserQuery()
+        '''for elem in r:
+            data_drugbank[elem.get("drugbank-id")[:-1]] = elem.get("name")[:-21], elem.get("name")[:-1], elem.get("is_a")[:7]'''
+        print(data_drugbank)
+
+    def parserQuery(self):
+        searcher = ix.searcher()
+        indicationQuery = QueryParser("indication", ix.schema).parse(self.clinicalSign)
+        toxicityQuery = QueryParser("toxicity", ix.schema).parse(self.clinicalSign)
+        indicationResults = searcher.search(indicationQuery)
+        toxicityResults = searcher.search(toxicityQuery)
+        indicationResults[0]
+        toxicityResults[0]
+        return indicationResults
+
+manager = DrugBankManager("thrombocytopenia")
+ix, writer = manager.index_initialisation()
+manager.extractData(ix, writer)
+
