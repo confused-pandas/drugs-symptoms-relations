@@ -24,23 +24,21 @@ class StitchManager:
         ix = create_in(self.path_index, self.schema)
         ix = open_dir(self.path_index)
         writer = ix.writer()
-        f = open(self.path,'rt')
-        print("open")
-        reader = csv.reader(f, delimiter='\t')  
-        print("index")
+        f = open(self.path,'r')
+        reader = csv.reader(f, delimiter='\t')
         cpt=0
         for ligne in reader:
             cpt+=1
             if cpt>10 and cpt<10000:
-                stitch_id = ligne[0]
+                stitch_id = unicode(ligne[0][4:])
                 if ligne[2]=='ATC':
-                    atc = ligne[3]
+                    atc = unicode(ligne[3])
                 else: 
-                    atc = "None"
+                    atc = u"None"
                     break
             else:
-                atc = "None"
-                stitch_id = "None"
+                atc = u"None"
+                stitch_id = u"None"
             if cpt > 10000:
                 break
             #print("stich_id :" , stitch_id, " atc :", atc)
@@ -53,7 +51,6 @@ class StitchManager:
         data_stitch = {}
         r = parserQuery(self, self.path_index, self.stitchId, "stitch_id")
         for elem in r:
-            print(elem)
             data_stitch[elem.get("stitch_id")] = elem.get("atc")
         return data_stitch
         
@@ -67,7 +64,7 @@ def parserQuery(self, path, item, schema_item):
     return results
  
 
-manager = StitchManager("CIDm00004626")
+manager = StitchManager("00001991")
 manager.index_initialisation()
 print(manager.extractDataFromStitchId())
 
