@@ -22,9 +22,9 @@ class SiderSEManager:
             connection.close()
             return data_SE
        
-manager = SiderSEManager("Acute abdomen") 
-manager.extractData()
-    
+#manager = SiderSEManager("Acute abdomen") 
+#manager.extractData()
+#print(manager.extractData())    
 
 
 
