@@ -24,7 +24,7 @@ class DiseaseMapping:
             print("---------------------------------------------------------")
 
         cpt_not_matched = 0  # Number of element not matched
-        cpt_matched = 0   # Number of element matched
+        cpt_matched = 0 # Number of element matched
         cpt_matched_orpha = 0
         cpt_not_matched_orpha = 0
         # Search in the synonyms
@@ -70,13 +70,20 @@ class DiseaseMapping:
             print("NAME -> |"+disease_name)
             print("------------------------------------------------------------------------")
 
+        if (cpt_matched_orpha+cpt_not_matched_orpha == 0):
+            q_orpha_hpo = "No mapping necessary for these data"
+            print("Quality of Mapping : ", q_orpha_hpo)
+        else:
+            q_orpha_hpo = cpt_matched/(cpt_matched+cpt_not_matched)*100
+            print("Quality of Mapping between orphadata (couchDB) and hpo_annotations.sqlite : ", q_orpha_hpo, "%")
+
     
         if (cpt_matched+cpt_not_matched == 0):
-            q = "No mapping necessary for these data"
-            print("Quality of Mapping : ", q)
+            q_omim_hpo = "No mapping necessary for these data"
+            print("Quality of Mapping : ", q_omim_hpo)
         else:
-            q = cpt_matched/(cpt_matched+cpt_not_matched)*100
-            print("Quality of Mapping between omim.txt and hpo_annotations.sqlite : ", q, "%")
+            q_omim_hpo = cpt_matched/(cpt_matched+cpt_not_matched)*100
+            print("Quality of Mapping between omim.txt and hpo_annotations.sqlite : ", q_omim_hpo, "%")
         
             
         return diseaseList
